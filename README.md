@@ -51,6 +51,17 @@ npm run dev
 
 Open the local URL printed by Vite. Its `/api` development proxy forwards requests to the Express server on port 5000.
 
+## Production deployment
+
+The frontend reads `VITE_API_URL` at build time. Set it to the deployed Express backend origin (for example, `https://flam-study-assistant-api.onrender.com`) in the Vercel project settings. When it is unset, local development continues to use Vite's `/api` proxy. Never set the OpenRouter key as a Vite variable; variables prefixed with `VITE_` are included in browser assets.
+
+The included `render.yaml` describes the Express service for Render, and `client/vercel.json` configures the Vite build for Vercel. Configure these backend environment variables in Render's dashboard:
+
+- `OPENROUTER_API_KEY`: a newly issued OpenRouter key
+- `FRONTEND_ORIGINS`: the exact deployed Vercel origin, such as `https://your-project.vercel.app` (comma-separate additional allowed origins)
+
+Create the backend from the repository using the Render blueprint. Create the Vercel project from the same repository with the project root set to `client`, add `VITE_API_URL` with the Render service origin, then deploy. If the Vercel origin changes, update `FRONTEND_ORIGINS` in Render. `/api/health` provides the backend health check; the study generation endpoint is `/api/response`.
+
 ## Usage
 
 Enter a topic or paste study notes, then choose **Generate**. Flip flashcards to reveal their answers, navigate the deck, answer each quiz question, and retest any questions missed at the end.

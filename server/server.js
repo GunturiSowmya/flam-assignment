@@ -4,9 +4,23 @@ import dotenv from "dotenv";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 dotenv.config();
 const PORT = Number(process.env.PORT) || 5000;
+const allowedOrigins = (process.env.FRONTEND_ORIGINS || "http://localhost:5173,http://127.0.0.1:5173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+app.use(cors({
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error("Origin is not allowed by CORS"));
+    },
+}));
+
+app.get("/api/health", (req, res) => {
+    res.json({ success: true });
+});
 
 const systemPrompt = `You are an AI Study Assistant. Create study material from the user's topic or notes.
 Return only valid JSON matching this schema, with no markdown or surrounding explanation:

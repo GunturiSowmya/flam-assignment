@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: flam-study-assistant-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false

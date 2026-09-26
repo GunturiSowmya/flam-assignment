@@ -1,9 +1,11 @@
 import { parseResult } from "./parseResult.js";
 
+const apiBaseUrl = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+
 export async function generateStudyMaterial(prompt) {
   let response;
   try {
-    response = await fetch("/api/response", {
+    response = await fetch(`${apiBaseUrl}/api/response`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),
